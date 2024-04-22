@@ -3,7 +3,8 @@
 const http = require('http');
 
 const requestListener = (request, response) => {
-    response.setHeader('Content-Type', 'text/html');
+    response.setHeader('Content-Type', 'application/json'); //Determining the way response from server's displayed to client
+    response.setHeader('X-Powered-By', 'NodeJS'); //If we add property that undefined (not formal), then we must add prefix with 'X'
 
     // An Property to get method's value from request
     // const method = request.method
