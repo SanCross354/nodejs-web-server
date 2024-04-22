@@ -9,33 +9,36 @@ const requestListener = (request, response) => {
     // An Property to get method's value from request
     // const method = request.method
     //     or
-    const { method } = request;
+    const { url, method } = request;
 
-    if (method === "GET") {
-        response.end('<h1>Hello!</h1>');
+    if (url === '/') {
+        if (method === "GET") {
+            response.end('<h1>Ini adalah homepage</h1>');
+        } else {
+            response.end(`<h1>Halaman tidak dapat diakses dengan ${method} request</h1>`);
+        }
+    } else if (url === '/about') {
+        if (method === "GET") {
+            response.end('<h1>Halo! Ini adalah halaman about</h1>');
+        } else if (method === 'POST') {
+            let body = [];
+
+            request.on('data', (chunk) => {
+                body.push(chunk);
+            });
+
+            request.on('end', () => {
+                body.response = Buffer.concat(body).toString;
+                const { name } = JSON.parse(body);
+                response.end(`<h1>Halo, ${name}! Ini adalah halaman about</h1>`);
+            });
+
+        } else {
+            response.end(`<h1>Halaman tidak dapat diakses dengan ${method} request</h1>`);
+        }
+    } else {
+        response.end('<h1>Halaman tidak ditemukan!</h1>');
     }
-
-    if (method === "POST") {
-        let body = [];
-
-        request.on('data', (chunk) => {
-            body.push(chunk);
-        });
-
-        request.on('end', () => {
-            body.response = Buffer.concat(body).toString;
-            const { name, age } = JSON.parse(body);
-            response.end(`<h1>Hai, ${name}!, I'm ${age}</h1>`);
-        });
-    }
-
-    // if (method === "PUT") {
-    //     response.end('<h1>Bonjour!</h1>');
-    // }
-
-    // if (method === "DELETE") {
-    //     response.end('<h1>Salam!</h1>');
-    // }
 };
 
 
